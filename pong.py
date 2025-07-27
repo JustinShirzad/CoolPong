@@ -9,7 +9,7 @@ wind.setup(width=800, height=600)
 # Turns off the screen updates for better performance
 wind.tracer(0)
 
-# Global variables
+# Global variables for the game
 paddle_a = None
 paddle_b = None
 ball = None
@@ -21,8 +21,15 @@ score_b = 0
 
 game_state = "title"
 
+# Global variables for title screen
 title = None
-controls = None
+left_paddle_controls = None
+right_paddle_controls = None
+
+def exit_game():
+    global wind
+    wind.bye()
+    exit()
 
 def initialise_main_game():
     global paddle_a, paddle_b, ball, pen
@@ -141,6 +148,8 @@ def main_game():
     wind.onkeyrelease(paddle_b_stop, "Up")
     wind.onkeypress(paddle_b_down, "Down")
     wind.onkeyrelease(paddle_b_stop, "Down")
+    wind.onkeypress(exit_game, "Escape")
+    wind.onkeypress(swap_game_state, "BackSpace")
 
     while True:
         # Update the screen
@@ -197,18 +206,37 @@ def initialise_title_screen():
     title.speed(0)
     title.color("white")
     title.penup()
-    title.goto(0, 230)
+    title.goto(0, 150)
     title.shapesize(stretch_wid=5, stretch_len=5)
-    title.write(f"Cool Pong", align="center", font=("Courier", 24, "normal"))
+    title.write(f"Cool Pong", align="center", font=("Courier", 80, "bold"))
 
     controls = turtle.Turtle()
     controls.speed(0)
     controls.color("white")
     controls.penup()
-    controls.goto(0, 0)
+    controls.goto(0, -200)
     controls.write("Press 'Space' to Start", align="center", font=("Courier", 18, "normal"))
 
+    left_paddle_controls = turtle.Turtle()
+    left_paddle_controls.speed(0)
+    left_paddle_controls.color("white")
+    left_paddle_controls.penup()
+    left_paddle_controls.goto(0, -60)
+    left_paddle_controls.write("Paddle A Controls: W (Up), S (Down)", align="center", font=("Courier", 14, "normal"))
 
+    right_paddle_controls = turtle.Turtle()
+    right_paddle_controls.speed(0)
+    right_paddle_controls.color("white")
+    right_paddle_controls.penup()
+    right_paddle_controls.goto(0, -90)
+    right_paddle_controls.write("Paddle B Controls: Up (Up), Down (Down)", align="center", font=("Courier", 14, "normal"))
+
+    leave_controls = turtle.Turtle()
+    leave_controls.speed(0)
+    leave_controls.color("white")
+    leave_controls.penup()
+    leave_controls.goto(0, -120)
+    leave_controls.write("Press 'Escape' to Exit and 'Backspace' to return to the title screen", align="center", font=("Courier", 14, "normal"))
 
 def title_screen():
     global game_state
@@ -217,6 +245,7 @@ def title_screen():
 
     wind.listen()
     wind.onkeypress(swap_game_state, "space")
+    wind.onkeypress(exit_game, "Escape")
 
     wind.mainloop()
 
@@ -227,12 +256,13 @@ def swap_game_state():
         main_game()
     elif game_state == "main_game":
         game_state = "title"
+        title_screen()
     
-def game_state_controller():
+def start_state_controller():
     global game_state
     if game_state == "title":
         title_screen()
     elif game_state == "main_game":
         main_game()
 
-game_state_controller()
+start_state_controller()
