@@ -21,6 +21,7 @@ paddle_a.color("white")
 paddle_a.shapesize(stretch_wid=6, stretch_len=1)
 paddle_a.penup()
 paddle_a.goto(-350, 0)
+paddle_a_direction = 0
 
 # Paddle A
 paddle_b = turtle.Turtle()
@@ -30,6 +31,7 @@ paddle_b.color("white")
 paddle_b.shapesize(stretch_wid=6, stretch_len=1)
 paddle_b.penup()
 paddle_b.goto(350, 0)
+paddle_b_direction = 0
 
 # Ball
 ball = turtle.Turtle()
@@ -54,38 +56,63 @@ pen.write(f"Player A: {score_a}  Player B: {score_b}", align="center", font=("Co
 
 # Function to move paddle A up
 def paddle_a_up():
-    # Get the current y-coordinate of paddle A and move it up
-    y = paddle_a.ycor()
-    y += 20
-    paddle_a.sety(y)
+    global paddle_a_direction
+    paddle_a_direction = 1
 
 # Function to move paddle A up
 def paddle_a_down():
-    # Get the current y-coordinate of paddle A and move it up
-    y = paddle_a.ycor()
-    y -= 20
-    paddle_a.sety(y)
+    global paddle_a_direction
+    paddle_a_direction = -1
 
-    # Function to move paddle B up
+# Function to move paddle B up
 def paddle_b_up():
-    # Get the current y-coordinate of paddle B and move it up
-    y = paddle_b.ycor()
-    y += 20
-    paddle_b.sety(y)
+    global paddle_b_direction
+    paddle_b_direction = 1
 
-# Function to move paddle A up
+# Function to move paddle B down
 def paddle_b_down():
-    # Get the current y-coordinate of paddle B and move it down
-    y = paddle_b.ycor()
-    y -= 20
-    paddle_b.sety(y)
+    global paddle_b_direction
+    paddle_b_direction = -1
+
+# Function to stop paddle A
+def paddle_a_stop():
+    global paddle_a_direction
+    paddle_a_direction = 0
+
+# Function to stop paddle B
+def paddle_b_stop():
+    global paddle_b_direction
+    paddle_b_direction = 0
 
 # Keyboard bindings
 wind.listen()
 wind.onkeypress(paddle_a_up, "w")
+wind.onkeyrelease(paddle_a_stop, "w")
 wind.onkeypress(paddle_a_down, "s")
+wind.onkeyrelease(paddle_a_stop, "s")
 wind.onkeypress(paddle_b_up, "Up")
+wind.onkeyrelease(paddle_b_stop, "Up")
 wind.onkeypress(paddle_b_down, "Down")
+wind.onkeyrelease(paddle_b_stop, "Down")
+
+# Update ball speed
+def ball_control():
+    if ball.dx < 0.1:
+        ball.dx -= 0.01
+    if ball.dy < 0.1:
+        ball.dy -= 0.01
+
+def update_paddle_a():
+    global paddle_a_direction
+    new_y = paddle_a.ycor() + (paddle_a_direction * 0.2)
+    if -240 <= new_y <= 240:
+        paddle_a.sety(new_y)
+
+def update_paddle_b():
+    global paddle_b_direction
+    new_y = paddle_b.ycor() + (paddle_b_direction * 0.2)
+    if -240 <= new_y <= 240:
+        paddle_b.sety(new_y)
 
 # Main game loop
 while True:
@@ -95,6 +122,9 @@ while True:
     # Move the ball
     ball.setx(ball.xcor() + ball.dx)
     ball.sety(ball.ycor() + ball.dy)
+
+    update_paddle_a()
+    update_paddle_b()
 
     # Border checking
     if ball.ycor() > 290:
