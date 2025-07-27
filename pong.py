@@ -19,7 +19,11 @@ paddle_b_direction = 0
 score_a = 0
 score_b = 0
 
+# Gloabal variable for game state
 game_state = "title"
+
+# Global variable for pause state
+is_paused = False
 
 # Global variables for title screen
 title = None
@@ -139,17 +143,18 @@ def main_game():
 
     initialise_main_game()
 
-    wind.listen()
-    wind.onkeypress(paddle_a_up, "w")
-    wind.onkeyrelease(paddle_a_stop, "w")
-    wind.onkeypress(paddle_a_down, "s")
-    wind.onkeyrelease(paddle_a_stop, "s")
-    wind.onkeypress(paddle_b_up, "Up")
-    wind.onkeyrelease(paddle_b_stop, "Up")
-    wind.onkeypress(paddle_b_down, "Down")
-    wind.onkeyrelease(paddle_b_stop, "Down")
-    wind.onkeypress(exit_game, "Escape")
-    wind.onkeypress(swap_game_state, "BackSpace")
+    if not is_paused:
+        wind.listen()
+        wind.onkeypress(paddle_a_up, "w")
+        wind.onkeyrelease(paddle_a_stop, "w")
+        wind.onkeypress(paddle_a_down, "s")
+        wind.onkeyrelease(paddle_a_stop, "s")
+        wind.onkeypress(paddle_b_up, "Up")
+        wind.onkeyrelease(paddle_b_stop, "Up")
+        wind.onkeypress(paddle_b_down, "Down")
+        wind.onkeyrelease(paddle_b_stop, "Down")
+        wind.onkeypress(exit_game, "Escape")
+        wind.onkeypress(swap_game_state, "BackSpace")
 
     while True:
         # Update the screen
@@ -186,10 +191,12 @@ def main_game():
         if (340 < ball.xcor() < 350) and (paddle_b.ycor() - 60 < ball.ycor() < paddle_b.ycor() + 60):
             ball.setx(340)
             ball.dx *= -1
+            ball.dx += 0.01
             winsound.PlaySound("bounce.wav", winsound.SND_ASYNC)
         if (-340 > ball.xcor() > -350) and (paddle_a.ycor() - 60 < ball.ycor() < paddle_a.ycor() + 60):
             ball.setx(-340)
             ball.dx *= -1
+            ball.dx += 0.01
             winsound.PlaySound("bounce.wav", winsound.SND_ASYNC)
 
 def initialise_title_screen():
