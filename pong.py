@@ -1,5 +1,5 @@
 import turtle
-import os
+import winsound
 
 # Initialize the main window
 wind = turtle.Screen()
@@ -100,11 +100,11 @@ while True:
     if ball.ycor() > 290:
         ball.sety(290)
         ball.dy *= -1
-        os.system("start /min wmplayer bounce.wav")
+        winsound.PlaySound("bounce.wav", winsound.SND_ASYNC)
     if ball.ycor() < -290:
         ball.sety(-290)
         ball.dy *= -1
-        os.system("start /min wmplayer bounce.wav")
+        winsound.PlaySound("bounce.wav", winsound.SND_ASYNC)
 
     if ball.xcor() > 390:
         ball.goto(0, 0)
@@ -123,8 +123,8 @@ while True:
     if (340 < ball.xcor() < 350) and (paddle_b.ycor() - 60 < ball.ycor() < paddle_b.ycor() + 60):
         ball.setx(340)
         ball.dx *= -1
-        os.system("start /min wmplayer bounce.wav")
+        winsound.PlaySound("bounce.wav", winsound.SND_ASYNC)
     if (-340 > ball.xcor() > -350) and (paddle_a.ycor() - 60 < ball.ycor() < paddle_a.ycor() + 60):
         ball.setx(-340)
         ball.dx *= -1
-        os.system("start /min wmplayer bounce.wav")
+        winsound.PlaySound("bounce.wav", winsound.SND_ASYNC)
